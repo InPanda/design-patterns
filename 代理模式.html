@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>设计模式实践</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <style>
+            .title {
+                font-weight: bold;
+                font-size: 18px;
+                padding: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <section>
+            <div class="title">代理模式</div>
+            <h4>定义：当直接访问一个对象不方便或者不满足需要时，为其提供一个替身对象来控制对这个对象的访问 简介：代理模式是一种非常有意义的模式，在我们日常开发中有许多常用功能都可以通过代理模式实现的，例如 防抖动函数（debounce 常用于控制用户输入后回调函数触发的时机），节流函数（throttle 常用于控制resize、scroll等事件的触发频率） </h4>
+            <div class="image-container"></div>
+        </section>
+
+        <script>
+            var MyImage = function () {
+                this.img = document.createElement('img');
+                document.body.appendChild(this.img);
+            };
+            MyImage.prototype.setSrc = function (src) {
+                this.img.src = src;
+            };
+
+            var ProxyImage = function () {
+                this.img = new MyImage();
+            };
+            ProxyImage.prototype.setSrc = function (src) {
+                var img = this.img;
+                var _img = new Image();
+                setTimeout(() => {
+                    _img.onload = function () {
+                        console.log('onload', src);
+
+                        img.setSrc(src); // 当新图片加载成功后替换loading图
+                    };
+                    _img.src = src;
+                }, 3000);
+                img.setSrc('./loading.gif'); // 将图片设置为loading图
+            };
+
+            var img = new ProxyImage();
+            img.setSrc('https://miro.medium.com/max/1200/1*qiqRLlNZ2b0xdlQu8qpjBQ.jpeg');
+        </script>
+    </body>
+</html>
